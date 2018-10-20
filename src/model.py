@@ -3,14 +3,18 @@ import pandas as pd
 from sklearn import linear_model
 # import matplotlib.pyplot as plt
 import random
+import os
 
 
 def main():
+    script_dir = os.path.dirname(__file__)
+    proj_dir = os.path.abspath(os.path.join(script_dir, '..'))
+    data_path = os.path.join(proj_dir, 'data/processed')
+    sub_path = os.path.join(proj_dir, 'models')
+
     # Read in data and store in arrays
-    data_path = '~/Documents/Data Science/Kaggle House Prices/Data/'
-    sub_path = '~/Documents/Data Science/Kaggle House Prices/Submission/'
-    X, y = csv_to_df(data_path + 'train_excl_cv.csv')
-    X_cv, y_cv = csv_to_df(data_path + 'cv.csv')
+    X, y = csv_to_df(os.path.join(data_path, 'train_excl_cv.csv'))
+    X_cv, y_cv = csv_to_df(os.path.join(data_path, 'cv.csv'))
     features = ['LotArea', 'YearBuilt']
     X = prep_features(X, features)
     X_cv = prep_features(X_cv, features)
@@ -29,7 +33,7 @@ def main():
 
     # Output test predictions
     if False:
-        output_predictions(cv_pred, sub_path + 'model2.csv')
+        output_predictions(cv_pred, os.path.join(sub_path, 'model2.csv'))
 
 
 def output_predictions(y_pred, filepath):
@@ -94,7 +98,7 @@ def plots():
     return
 
 
-def prepocess():
+def preprocess():
     # TODO: change function to take train dataframe as an argument
     # then return the split dataframes
     # Split training dataset into train and CV
