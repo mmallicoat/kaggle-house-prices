@@ -12,7 +12,7 @@ import os
 
 def main():
     script_dir = os.path.dirname(__file__)
-    proj_dir = os.path.abspath(os.path.join(script_dir, '..'))
+    proj_dir = os.path.abspath(os.path.join(script_dir, '../..'))
     data_path = os.path.join(proj_dir, 'data/processed')
     sub_path = os.path.join(proj_dir, 'models')
 

@@ -112,3 +112,8 @@ def fit_regression(X, y):
 
 if __name__ == '__main__':
     main()
+def prep_response_var(df):
+    # Log-transform the response variable, SalePrice
+    df['SalePrice'] = df['SalePrice'].apply(np.log)
+    return df
+
