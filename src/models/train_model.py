@@ -8,12 +8,12 @@ import os
 
 def main():
     script_dir = os.path.dirname(__file__)
-    proj_dir = os.path.abspath(os.path.join(script_dir, '..'))
+    proj_dir = os.path.abspath(os.path.join(script_dir, '../..'))
     data_path = os.path.join(proj_dir, 'data/processed')
     sub_path = os.path.join(proj_dir, 'models')
 
     # Read in data and store in arrays
-    X, y = csv_to_df(os.path.join(data_path, 'train_excl_cv.csv'))
+    X, y = csv_to_df(os.path.join(data_path, 'train.csv'))
     X_cv, y_cv = csv_to_df(os.path.join(data_path, 'cv.csv'))
     features = ['LotArea', 'YearBuilt']
     X = prep_features(X, features)
@@ -38,6 +38,7 @@ def main():
 
 def output_predictions(y_pred, filepath):
     # Indices of test data for submission will be 1461 through 2919
+    # TODO: check if this still correct with new stratify code
     indices = range(1461, 1461 + len(y_pred))
     y_pred = pd.DataFrame(np.exp(y_pred),
                           index=indices,
@@ -78,6 +79,7 @@ def predict(model, X):
 
 
 def train(X, y):
+    # Normalize subtracts mean from each variable?
     model = linear_model.LinearRegression(fit_intercept=True,
                                           normalize=True)
     model.fit(X, y)
@@ -96,20 +98,6 @@ def plots():
     # plt.yticks(())
     # plt.show()
     return
-
-
-def preprocess():
-    # TODO: change function to take train dataframe as an argument
-    # then return the split dataframes
-    # Split training dataset into train and CV
-    train_full = pd.read_csv('./Data/train.csv')
-    cv_indices = random.sample(train_full.index, 460)
-    cv = train_full.ix[cv_indices]
-    train = train_full.drop(cv_indices)
-    # Write out
-    cv.to_csv(path_or_buf='./Data/cv.csv', sep=',')
-    train.to_csv(path_or_buf='./Data/train_excl_cv.csv', sep=',')
-
 
 # X is an 2-dim array without intercept
 # y is an 1-dim array
