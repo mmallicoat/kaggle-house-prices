@@ -24,11 +24,10 @@ def main(argv):
 
     # Make predictions
     y_pred = model.predict(X)
-    # Reverse response transform
-    y_pred = np.exp(y_pred)
 
-    # Calculate error of untransformed response var
+    # Calculate error of log-transformed response var
     if y is not None:
+        y = np.log(y)
         error = loss_function(y_pred, y)
         print("RMSE is %f" % error)
 
@@ -37,8 +36,9 @@ def main(argv):
         indices = range(1461, 1461 + len(y_pred))
     else:
         indices = range(1, 1 + len(y_pred))
-    y_pred = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
-    y_pred.to_csv(predictfile, index_label='Id')
+    y_pred = np.exp(y_pred)  # reverse response transform
+    y_pred_df = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
+    y_pred_df.to_csv(predictfile, index_label='Id')
     
 def loss_function(y_pred, y):  # 1-dim numpy arrays of equal length
     SSE = float(sum((y - y_pred) ** 2))  # must be float to later divide
