@@ -37,8 +37,8 @@ def main(argv):
         indices = range(1461, 1461 + len(y_pred))
     else:
         indices = range(1, 1 + len(y_pred))
-        y_pred = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
-        y_pred.to_csv(predictfile, index_label='Id')
+    y_pred = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
+    y_pred.to_csv(predictfile, index_label='Id')
     
 def loss_function(y_pred, y):  # 1-dim numpy arrays of equal length
     SSE = float(sum((y - y_pred) ** 2))  # must be float to later divide
