@@ -9,20 +9,14 @@ def main(argv):
     
     # Read in raw train, CV, or test data
     df = pd.read_csv(infile)
+
     # Prepare features
-    df = prep_features(df)
+    # df = prep_features(df)
+    # NOTE: feature selection now in train_model.py
+    # If we engineer any features, code will be here
+
     # Write out
     df.to_csv(outfile, index=False)
     
-def prep_features(df):
-    # Select features to use in models
-    features = ['LotArea', 'YearBuilt']
-    # Keep independent var if available
-    columns = df.columns.tolist()
-    if 'SalePrice' in columns:
-        features.append('SalePrice')
-    df = df[features]
-    return df
-
 if __name__ == '__main__':
     main(sys.argv)

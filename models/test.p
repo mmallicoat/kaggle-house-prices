@@ -12,11 +12,10 @@ Rp4
 (dp5
 S'normalize'
 p6
-I01
+I00
 sS'n_jobs'
 p7
-I1
-sS'rank_'
+NsS'rank_'
 p8
 I2
 sS'fit_intercept'
@@ -56,7 +55,7 @@ I-1
 I0
 tp23
 bI00
-S'\x96\xefz\xeb\xd0p[@'
+S'\x95\xefz\xeb\xd0p[@'
 p24
 tp25
 bsS'coef_'
@@ -74,12 +73,12 @@ I2
 tp30
 g21
 I00
-S'\x1c\x93\xe9\xc6Q\xfa\xe2>\xd9\x05\\k\xf1d\x7f?'
+S'\xb57:\x0bCP\xb9?j\x97\x84i\xf5\xca\xcd?'
 p31
 tp32
 bsS'_sklearn_version'
 p33
-S'0.19.1'
+S'0.20.0'
 p34
 sS'copy_X'
 p35
@@ -98,7 +97,7 @@ Rp39
 tp40
 g21
 I00
-S'\xd8\xe4%\xc0Dn\t\xc0'
+S'z\x00\xf9Gx\r(@'
 p41
 tp42
 bsS'singular_'
@@ -115,7 +114,7 @@ Rp46
 tp47
 g21
 I00
-S'\xad\xb8\xc8\xeb\x0f\x08\xf0?\xcb!\\\x04\xd8\xef\xef?'
+S'D\x1dR\x17\xf5\x93@@$[\x84UD\x83@@'
 p48
 tp49
 bsb.

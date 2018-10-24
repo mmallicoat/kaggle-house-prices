@@ -39,4 +39,10 @@ categorical variables, using ``OneHotEncoder`` or
 
 sklearn has `pipelines
 <http://scikit-learn.org/stable/modules/classes.html#module-sklearn.pipeline>`__,
-too.
+too. `More on pipelines
+<http://scikit-learn.org/stable/modules/compose.html#pipeline>`__.
+
+Article on the `difference between normalization, standardization,
+and regularization
+<https://maristie.com/blog/differences-between-normalization-standardization-and-regularization/>`__.
+A `FAQ <http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html>`__ on the topic.

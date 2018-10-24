@@ -1,4 +1,6 @@
-data/*
 .DS_Store
 **/*.pyc
 *.swp
+venv/*
+data/*
+models/*
