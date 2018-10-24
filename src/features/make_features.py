@@ -7,14 +7,6 @@ def main(argv):
     infile = os.path.abspath(argv[1])
     outfile = os.path.abspath(argv[2])
     
-    # script_dir = os.path.dirname(__file__)
-    # proj_dir = os.path.abspath(os.path.join(script_dir, '../..'))
-    # data_dir = os.path.join(proj_dir, 'data/interim')
-    # out_dir = os.path.join(proj_dir, 'data/processed')
-    # test_path = os.path.join(proj_dir, 'data/interim/test.csv')
-    # train_path = os.path.join(proj_dir, 'data/interim/train.csv')
-    # cv_path = os.path.join(proj_dir, 'data/interim/cv.csv')
-    
     # Read in raw train, CV, or test data
     df = pd.read_csv(infile)
     # Prepare features
@@ -23,7 +15,13 @@ def main(argv):
     df.to_csv(outfile, index=False)
     
 def prep_features(df):
-    # Nothing to do yet
+    # Select features to use in models
+    features = ['LotArea', 'YearBuilt']
+    # Keep independent var if available
+    columns = df.columns.tolist()
+    if 'SalePrice' in columns:
+        features.append('SalePrice')
+    df = df[features]
     return df
 
 if __name__ == '__main__':

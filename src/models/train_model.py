@@ -11,13 +11,7 @@ def main(argv):
 
     # Read in data and store in arrays
     X, y = csv_to_vars(trainfile)
-
-    # Define model
-    features = ['LotArea', 'YearBuilt']
-    X = X[features].values  # select features; convert to numpy array
-    y = y.values  # convert to numpy array
-    y = y.reshape(y.shape[0], 1)  # reshape
-    y = np.log(y)  # log-transform
+    X, y = format_data(X, y)
 
     # Train
     model = train(X, y)
@@ -25,14 +19,26 @@ def main(argv):
     # Serialize model to pickle file
     pickle.dump(model, open(modelfile, 'wb'))
 
+def format_data(X, y):
+    X = X.values
+    if y is not None:
+        y = y.values  # convert to numpy array
+        y = y.reshape(y.shape[0], 1)  # reshape
+        # TODO: leave log-transform to the GLM model
+        y = np.log(y)  # log-transform
+    return X, y
 
 # reads in csv; splits indep and dep variables
 def csv_to_vars(filepath):
     df = pd.read_csv(filepath)
-    features = df.columns.tolist()
-    features.remove('SalePrice')
-    y = df['SalePrice']
-    X = df[features]
+    if 'SalePrice' in df.columns.tolist():
+        dep_vars = df.columns.tolist()
+        dep_vars.remove('SalePrice')
+        y = df['SalePrice']
+        X = df[dep_vars]
+    else:  # no response variable
+        X = df
+        y = None
     return X, y
 
 def train(X, y):

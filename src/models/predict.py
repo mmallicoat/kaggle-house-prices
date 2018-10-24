@@ -3,46 +3,39 @@ import pandas as pd
 from sklearn import linear_model
 import sys
 import os
-import train_model.py
 import pickle
-
-# TODO: this entire file needs to be rewritten. This should take a
-# pretrained model, either the parameters themselves or the filepath
-# of the parameters, and return the predictions or write out the
-# predictions to a supplied location.
-# This should perhaps also calculate the error, too, if a flag is
-# set and the true values of response variable are supplied.
-# For the test dataset, error will not be possible to calculate.
+import train_model  # local module
 
 def main(argv):
     modelfile = os.path.abspath(argv[1])
     datafile = os.path.abspath(argv[2])
     predictfile = os.path.abspath(argv[3])
-    calc_error = os.path.abspath(argv[4])
+    # calc_error = os.path.abspath(argv[4])
 
     # Read in model
     model = pickle.load(open(modelfile, 'rb'))
 
     # Read in data to predict, store in arrays
-    # TODO: check if this gives error if no response var
     X, y = train_model.csv_to_vars(datafile)
-    # TODO: Repeat feature selection as in model definition
+    X, y = train_model.format_data(X, y)
 
     # Make predictions
     y_pred = model.predict(X)
 
     # Calculate error
-    if calc_error:
-        # TODO: shapes may not match here
+    if y is not None:
         error = loss_function(y_pred, y)
-        print("RMSE is %f: " % error)
+        print("RMSE is %f" % error)
 
     # Output test predictions
-    # TODO: check syntax
-    # NOTE: response variable log-transform is NOT reversed here
-    indices = range(1461, 1461 + len(y_pred))
-    y_pred = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
-    y_pred.to_csv(predictfile, index_label='Id')
+    # NOTE: move log-transform to GLM model
+    if y is None:  # set proper Id for submission
+        indices = range(1461, 1461 + len(y_pred))
+    else:
+        indices = range(1, 1 + len(y_pred))
+        y_pred = np.exp(y_pred)  # reverse log-transofrm
+        y_pred = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
+        y_pred.to_csv(predictfile, index_label='Id')
     
 def loss_function(y_pred, y):  # 1-dim numpy arrays of equal length
     SSE = float(sum((y - y_pred) ** 2))  # must be float to divide
