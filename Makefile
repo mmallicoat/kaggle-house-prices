@@ -10,14 +10,8 @@ data/interim/test.csv:
 	cp data/raw/test.csv data/interim/test.csv
 
 # Make features
-data/processed/train.csv: data/interim/train.csv
-	python src/features/make_features.py data/interim/train.csv data/processed/train.csv
-
-data/processed/cv.csv: data/interim/cv.csv
-	python src/features/make_features.py data/interim/cv.csv data/processed/cv.csv
-
-data/processed/test.csv: data/interim/test.csv
-	python src/features/make_features.py data/interim/test.csv data/processed/test.csv
+data/processed/train.csv data/processed/test.csv data/processed/cv.csv: data/interim/train.csv data/interim/test.csv data/interim/cv.csv 
+	python src/features/make_features.py data/interim data/processed
 
 # Train model
 models/mymodel.p models/mymodel-scaler.npy: data/processed/train.csv
