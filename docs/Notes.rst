@@ -1,13 +1,17 @@
 Todo
 ----
 
+*   Encode categorical variables.
+*   Select features using variance threshold, possibly in
+    make_features.py.
+*   Re-predict
+
+Won't Do
+````````
 *   Implement a learning curve to see whether the model is over-
     or under-fitting
 *   If over-fitting, add regularization. If under-fitting, try
     adding more features.
-*   To determine which features to add, maybe try using decision
-    trees / random forest? Or look a correlations between indep.
-    variables and the response variable?
 *   Implement preprocessing and variable transformations in a
     model elegant and repeatable way
 
@@ -15,6 +19,20 @@ Done
 ````
 *   Restructure model to separate data prep from training,
     and training from testing a model.
+
+Feature Selection
+-----------------
+
+`sklearn article
+<http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection>`__.
+
+Types: correlation, scoring (?), wrapper.
+
+`Pipeline and feature selection
+<http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection-as-part-of-a-pipeline>`__:
+"Feature selection is usually used as a pre-processing step before
+doing the actual learning. The recommended way to do this in
+scikit-learn is to use a ``sklearn.pipeline.Pipeline``."
 
 Preproccessing
 --------------
@@ -24,8 +42,6 @@ lognormal response in a linear model. To implement this, I may
 need to do some power transform (such as Box–Cox) in a
 preprocessing step. See `sklearn docs on preprocessing
 <http://scikit-learn.org/stable/modules/preprocessing.html>`__.
-
-The scalers includej
 
 `This article
 <https://ryankresse.com/convenient-preprocessing-with-sklearn_pandas-dataframemapper/>`__
