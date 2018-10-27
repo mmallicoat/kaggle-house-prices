@@ -1,7 +1,6 @@
 Todo
 ----
 
-*   Encode categorical variables.
 *   Select features using variance threshold, possibly in
     make_features.py.
 *   Re-predict
@@ -17,6 +16,7 @@ Won't Do
 
 Done
 ````
+*   Encode categorical variables.
 *   Restructure model to separate data prep from training,
     and training from testing a model.
 
