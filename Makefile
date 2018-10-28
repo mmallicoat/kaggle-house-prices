@@ -1,6 +1,7 @@
 interim: data/interim/train.csv data/interim/cv.csv data/interim/test.csv
-
 processed: data/processed/train.csv data/processed/test.csv data/processed/cv.csv
+model: models/mymodel.p models/mymodel-scaler.npy
+predictions: models/mymodel-test-pred.csv models/mymodel-cv-pred.csv
 
 # Stratify training data and copy test data forward
 data/interim/train.csv data/interim/cv.csv:

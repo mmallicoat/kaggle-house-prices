@@ -13,7 +13,7 @@ def main(argv):
     modelstem = os.path.abspath(argv[2])  # path and basename, no ext
 
     # Read and prepare data
-    train_df = pd.read_csv(trainfile)
+    train_df = pd.read_csv(trainfile, index_col=0)
     X, y = prep_data(train_df)
 
     # Scale and transform
@@ -57,9 +57,7 @@ def prep_data(df):
         X = df
         y = None
 
-    # Select features
-    features = ['LotArea', 'YearBuilt']
-    X = X[features]
+    # NOTE: Feature selection is done in make_features.py
 
     # Convert to numpy arrays
     X = X.values.astype(np.float64)

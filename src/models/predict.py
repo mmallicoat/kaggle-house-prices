@@ -16,7 +16,7 @@ def main(argv):
     scaler_params = np.load(modelstem + '-scaler.npy')
 
     # Read in data to predict, store in arrays
-    df = pd.read_csv(datafile)
+    df = pd.read_csv(datafile, index_col=0)
     X, y = train_model.prep_data(df)
 
     # Scale and transform variables
@@ -32,13 +32,9 @@ def main(argv):
         print("RMSE is %f" % error)
 
     # Output test predictions
-    if y is None:  # set proper Id for submission
-        indices = range(1461, 1461 + len(y_pred))
-    else:
-        indices = range(1, 1 + len(y_pred))
-    y_pred = np.exp(y_pred)  # reverse response transform
-    y_pred_df = pd.DataFrame(y_pred, index=indices, columns=['SalePrice'])
-    y_pred_df.to_csv(predictfile, index_label='Id')
+    y_pred = np.exp(y_pred)  # reverse transformation of response var
+    y_pred_df = pd.DataFrame(y_pred, index=df.index, columns=['SalePrice'])
+    y_pred_df.to_csv(predictfile)
     
 def loss_function(y_pred, y):  # 1-dim numpy arrays of equal length
     SSE = float(sum((y - y_pred) ** 2))  # must be float to later divide
