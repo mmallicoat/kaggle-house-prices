@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
-import os
-import sys
 from sklearn import preprocessing
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import sys
+import os
 import pdb
 
 def main(argv):
@@ -11,9 +13,9 @@ def main(argv):
     outpath = os.path.abspath(argv[2])
     
     # Read in raw train, CV, or test data
-    df_train = pd.read_csv(os.path.join(inpath, 'train.csv'))
-    df_test = pd.read_csv(os.path.join(inpath, 'test.csv'))
-    df_cv = pd.read_csv(os.path.join(inpath, 'cv.csv'))
+    df_train = pd.read_csv(os.path.join(inpath, 'train.csv'), index_col=0)
+    df_test = pd.read_csv(os.path.join(inpath, 'test.csv'), index_col=0)
+    df_cv = pd.read_csv(os.path.join(inpath, 'cv.csv'), index_col=0)
 
     # Get list of variables by data type
     var_types = df_train.dtypes  # Series
@@ -46,53 +48,71 @@ def main(argv):
     entropy_df = pd.DataFrame.from_dict(entropy_dict,
                                         orient='index',
                                         columns=['Entropy'])
-    entropy_df.sort_values(by='Entropy', inplace=True)
-    # Select variables with Shannon entropy less than 0.5
-    select_cat_vars = entropy_df[entropy_df['Entropy'] < .5].index.tolist()
+    # Select variables with Shannon entropy greater than threshold
+    select_cat_vars = entropy_df[entropy_df['Entropy'] > 1.4].index.tolist()
 
     # Select numeric variables
-    # TODO: calculate variance of numeric variables
+    var_dict = dict()
+    for var in num_vars:
+        var_dict[var] = np.var(df_train[var])
+    var_df = pd.DataFrame.from_dict(var_dict, orient='index',
+                                    columns=['Variance'])
+    # var_df.sort_values(by='Variance', ascending=False, inplace=True)
+    # Select variables with variance greater than threshold
+    select_num_vars = var_df[var_df['Variance'] > 10 ** 4].index.tolist()
+    try:
+        select_num_vars.remove('SalePrice')  # don't include response variable
+    except:
+        pass
 
     # Remove non-selected variables
-    # TODO
+    select_vars = select_num_vars + select_cat_vars
+    df_train = df_train[select_vars + ['SalePrice']]  # keep response var
+    df_cv = df_cv[select_vars + ['SalePrice']]
+    df_test = df_test[select_vars]
     
     # Encode categorical variables
     # TODO: rewrite this encapsulating in a function
-    for field in fields:
-        if df_train.dtypes[field] == np.dtype('O'):
-            ar_train = df_train[field].values.reshape(len(df_train), 1)
-            ar_test = df_test[field].values.reshape(len(df_test), 1)
-            ar_cv = df_cv[field].values.reshape(len(df_cv), 1)
+    for field in select_cat_vars:
+        ar_train = df_train[field].values.reshape(len(df_train), 1)
+        ar_test = df_test[field].values.reshape(len(df_test), 1)
+        ar_cv = df_cv[field].values.reshape(len(df_cv), 1)
 
-            # Build list of unqiue values for field
-            values = df_train[field].unique()
-            values = np.append(values, df_test[field].unique())
-            values = np.append(values, df_cv[field].unique())
-            values = [np.unique(values)]  # list of arrays
-            
-            # Transform
-            encoder = preprocessing.OneHotEncoder(
-                                            categories=values,
-                                            sparse=False)
-            encoder.fit(ar_train)
-            ar_train = encoder.transform(ar_train)
-            ar_test = encoder.transform(ar_test)
-            ar_cv = encoder.transform(ar_cv)
+        # Build list of unqiue values for field
+        values = df_train[field].unique()
+        values = np.append(values, df_test[field].unique())
+        values = np.append(values, df_cv[field].unique())
+        values = [np.unique(values)]  # list of arrays
+        
+        # Transform
+        encoder = preprocessing.OneHotEncoder(categories=values,
+                                              sparse=False)
+        encoder.fit(ar_train)
+        ar_train = encoder.transform(ar_train)
+        ar_test = encoder.transform(ar_test)
+        ar_cv = encoder.transform(ar_cv)
 
-            # Replace with encoded variables in dataframe
-            df_train.drop(field, axis=1, inplace=True)
-            df_test.drop(field, axis=1, inplace=True)
-            df_cv.drop(field, axis=1, inplace=True)
-            for i in range(ar_train.shape[1]):
-                df_train[field + '_%s' % i] = ar_train[:,i]
-                df_test[field + '_%s' % i] = ar_test[:,i]
-                df_cv[field + '_%s' % i] = ar_cv[:,i]
-
+        # Replace with encoded variables in dataframe
+        df_train.drop(field, axis=1, inplace=True)
+        df_test.drop(field, axis=1, inplace=True)
+        df_cv.drop(field, axis=1, inplace=True)
+        for i in range(ar_train.shape[1]):
+            df_train[field + '_%s' % i] = ar_train[:,i]
+            df_test[field + '_%s' % i] = ar_test[:,i]
+            df_cv[field + '_%s' % i] = ar_cv[:,i]
 
     # Write out
-    df_train.to_csv(os.path.join(outpath, 'train.csv'), index=False)
-    df_test.to_csv(os.path.join(outpath, 'test.csv'), index=False)
-    df_cv.to_csv(os.path.join(outpath, 'cv.csv'), index=False)
+    df_train.to_csv(os.path.join(outpath, 'train.csv'))
+    df_test.to_csv(os.path.join(outpath, 'test.csv'))
+    df_cv.to_csv(os.path.join(outpath, 'cv.csv'))
+
+def histogram(x):  # x is a Pandas Series
+    # mpl.use('TkAgg')  # needed sometimes for obscure reasons
+    plt.hist(x, bins=10)
+    # plt.xticks(np.arange(min(x), max(x)+1, .5))
+    # plt.axis([min(x), 10**6, 0, 200])
+    plt.grid(True)
+    plt.show()
 
 def handle_nan(sub_dict, df):
     fields = df.columns.tolist()
