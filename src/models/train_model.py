@@ -70,8 +70,8 @@ def prep_data(df):
 def train(X, y):
     # X array does not have an intercept, so set fit_intercept
     # Since standardization already perform, do not normalize
-    model = linear_model.LinearRegression(fit_intercept=True,
-                                          normalize=False)
+    model = linear_model.Ridge(alpha=1, fit_intercept=True,
+                               normalize=False)
     model.fit(X, y)
     return model
 

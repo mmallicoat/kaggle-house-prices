@@ -1,10 +1,6 @@
 Todo
 ----
 
-*   Select features using variance threshold, possibly in
-    make_features.py.
-*   Re-predict
-
 Won't Do
 ````````
 *   Implement a learning curve to see whether the model is over-
@@ -13,12 +9,16 @@ Won't Do
     adding more features.
 *   Implement preprocessing and variable transformations in a
     model elegant and repeatable way
+*   Select features using variance threshold, possibly in
+    make_features.py.
 
 Done
 ````
 *   Encode categorical variables.
 *   Restructure model to separate data prep from training,
     and training from testing a model.
+*   Investigate test predictions of zero and overflow
+*   Re-submit predictions
 
 Feature Selection
 -----------------
