@@ -25,3 +25,7 @@ models/mymodel-cv-pred.csv: models/mymodel.p models/mymodel-scaler.npy
 # Make predictions
 models/mymodel-test-pred.csv: models/mymodel.p models/mymodel-scaler.npy
 	python src/models/predict.py models/mymodel data/processed/test.csv models/mymodel-test-pred.csv
+
+# Make plots
+reports/figures/y-hist.png reports/figures/y-transformed-hist.png: data/processed/train.csv
+	python src/visualizations/plots.py data/processed/train.csv reports/figures
