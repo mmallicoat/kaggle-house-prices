@@ -29,7 +29,7 @@ complete with the price of each house, into training and
 cross-validation (CV) datasets. Having a CV dataset lets you
 compare the performance of models on out-of-sample data, thereby
 avoiding overfitting and getting a more accurate estimate of its
-perfomrance. I randomly partitioned the labeled dataset into the
+performance. I randomly partitioned the labeled dataset into the
 training and CV datasets, since I do not know if there is some
 order to how they are presented in the file Kaggle provides which
 might bias my model.
@@ -42,17 +42,25 @@ new value "Unknown."
 
 To select from the many features, I used some simple heuristics.
 For the numeric variables, I calculated the variance of each
-within the training data. I plotted a histogram of these and found
-an "elbow" where there was a significant drop-off in variance. I
-then selected all variables with variance above this threshold.
-This amounted to 12 variables, about a third of the numeric
-variables available. The rationale behind this is that variables
-with low variance do not provide much discriminating information
-between houses, since all of the houses will have similar values.
+within the training data. I produced a scatter plot of the
+variances of the variables, sorted in ascending order. In this
+plot, I found an "elbow" where there was a significant drop-off
+in variance. I then selected all variables with variance above
+this threshold. This amounted to 12 variables, about a third of
+the numeric variables available. The rationale behind this is that
+variables with low variance do not provide much discriminating
+information between houses, since all of the houses will have
+similar values.
+
+.. figure:: ./figures/numeric-selection.png
+   :align: center
+
+   "Elbow" in the plot of variances of numeric variables
+
 For each of the categorical variables, I calculated the entropy_,
 assuming each value was pulled from a multinomial distribution.
 Entropy is a measure of the amount of "information" contained in
-a stoachastic process. Random variables with little "surprise" in
+a stochastic process. Random variables with little "surprise" in
 their realized values will have low entropy. For binary variables,
 the entropy calculated is equivalent to the variance of the
 corresponding Bernoulli distribution. After calculating the
@@ -61,7 +69,10 @@ threshold, and selected all of the variables above this threshold,
 in the same manner as the numeric variables. This amounted to 14
 variables, about a third of the categorical variables available.
 
-.. TODO: [Show plot of elbow in variance?]
+.. figure:: ./figures/categorical-selection.png
+   :align: center
+
+   "Elbow" in the histogram of entropy of categorical variables
 
 .. _entropy: https://en.wikipedia.org/wiki/Entropy_(information_theory)
 
@@ -79,7 +90,7 @@ that can be applied to all datasets uniformly, particularly
 when the processing procedure is "fitted" to the training data.
 The processing must then be applied to training data first, the
 parameters estimated, and those parameters stored somewhere so
-that they can be applied when processing the the CV and testing
+that they can be applied when processing the CV and testing
 datasets. Instead of writing out the parameters to disk, as I did
 for the scaler and regression parameters, I simply kept them in
 memory and processed all of the datasets at once. This is less
@@ -100,7 +111,7 @@ Before training the model, I performed some transformations on
 the data. I standardized the features, subtracting the mean and
 dividing by standard deviation to create features with zero mean
 and unit variance. If the features have different scales, the
-magnitiude of the fitted coefficients in the linear model will be
+magnitude of the fitted coefficients in the linear model will be
 influenced by the scale of the underlying variables and harder to
 compare. Coefficients of variables with a larger scale would also
 be penalized more highly if regularization is applied.
@@ -110,7 +121,7 @@ price response variable. There are two reasons for this: First,
 like most currency values, the house prices in the data are not
 normally distributed, which violates an assumption of the linear
 regression. This can be seen in the histogram below over which
-I've overlayed a fitted normal distribution.
+I've overlaid a fitted normal distribution.
 
 .. figure:: ./figures/y-hist.png
    :align: center
@@ -176,13 +187,23 @@ preprocessing steps and repeated:
 5. Before writing out the predictions, reverse the log-transform
    by exponentiating the predicted value.
 
-Compared to the leaderboard on the Kaggle website, my model's
-performance in fairly middling.
+The Kaggle competition is judged by the square root of the mean
+squared error (RMSE) of the predictions of the log-transformed
+house prices. This metric for our model (on the test dataset) is
+0.168, which is fairly middling compared to the leaderboard on the
+Kaggle website. For the CV dataset, the metric is 0.166, which is
+close to that of the test dataset, as we would expect.
 
-.. TODO: what was my error rate? Put in context. The average house price is X. The predictions average deviation from this is Y.
+The metric is somewhat difficult to interpret, so I calculated the
+RMSE of the *un*-transformed prices for comparison. The RMSE for
+the untransformed prices in the CV dataset is $37,576. This is
+very roughly [#]_ the expected deviation of our prediction from
+the true price. The mean house price in this dataset is $178,186;
+so, although our error is significant, the predictions are within
+the ballpark of the true values.
 
-There are many optimiziations left
-to be made. Here are some things to try in the future:
+There are many avenues to explore which could improve the
+model's performance. Here are some things to try in the future:
 
 *   Engineer some custom features, especially ones that capture
     interactions between variables. These might be something like the
@@ -194,16 +215,21 @@ to be made. Here are some things to try in the future:
     they could be taken advantage of.
 *   Try some alternate models, especially those that can fit
     non-linear functions. There may be some non-linear interactions
-    between the house price and the indepdenent vairables, such as
+    between the house price and the independent variables, such as
     the price not being monotonically increasing with the value of an
     independence variable. One plausible explanation of this might be
     something along the lines of: a larger yard may correlate with a
     more valuable property, but it may correlate with a more rural
     location; the negative effect of the rural location on the house
-    price might outweight the increase from the larger yard.
+    price might outweigh the increase from the larger yard.
 *   Supplement external data: we are given the names of
-    neighborhoods of the houses. There is publically available data on
+    neighborhoods of the houses. There is publicly available data on
     houses and their prices from these locations. This data could be
     collected and used to supplement the data provided by Kaggle. Or,
     a secondary model could be built from the external data and then
     combined with the model trained on the Kaggle data in an ensemble.
+
+.. [#] The RMSE is in fact the standard deviation of the
+    residuals, which are the differences between each prediction and
+    true value. The standard deviation is the square root of the
+    expected squared deviation, rather than the expected deviation.

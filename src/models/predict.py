@@ -27,9 +27,10 @@ def main(argv):
 
     # Calculate error of log-transformed response var
     if y is not None:
-        y = np.log(y)
-        error = loss_function(y_pred, y)
-        print("RMSE is %f" % error)
+        error = loss_function(np.exp(y_pred), y)
+        print("RMSE of untransformed prices is %f" % error)
+        error = loss_function(y_pred, np.log(y))
+        print("RMSE of log-transformed prices is %f" % error)
 
     # Output test predictions
     y_pred = np.exp(y_pred)  # reverse transformation of response var

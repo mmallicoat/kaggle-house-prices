@@ -20,7 +20,7 @@ def main(argv):
 
     # Plot untransformed response variable
     plt.hist(y, bins=30, density=True)
-    plt.title("House Sale Prices")
+    plt.title("Sale Price of Houses")
     mu = np.mean(y)
     variance = np.var(y)
     sigma = np.sqrt(variance)
@@ -32,7 +32,7 @@ def main(argv):
 
     # Plot transformed response variable
     plt.hist(y_transform, bins=30, density=True)
-    plt.title("Log-Transformed House Sale Prices")
+    plt.title("Log-Transformed Sale Price of Houses")
     mu = np.mean(y_transform)
     variance = np.var(y_transform)
     sigma = np.sqrt(variance)
