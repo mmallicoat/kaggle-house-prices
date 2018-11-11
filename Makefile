@@ -29,3 +29,6 @@ models/mymodel-test-pred.csv: models/mymodel.p models/mymodel-scaler.npy
 # Make plots
 reports/figures/y-hist.png reports/figures/y-transformed-hist.png: data/processed/train.csv
 	python src/visualizations/plots.py data/processed/train.csv reports/figures
+
+reports/figures/categorical-selection.png reports/figures/numeric-selection.png: data/interim/train.csv
+	python src/visualizations/feature_selection_plot.py data/interim reports/figures
