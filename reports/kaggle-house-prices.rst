@@ -1,5 +1,8 @@
-Predicting House Prices
-=======================
+:date: 2018-11-12
+:modified: 2018-11-12
+:title: Predicting House Prices
+:category: Projects
+:slug: kaggle-house-prices
 
 Introduction
 ------------
@@ -59,6 +62,7 @@ similar values.
 
 .. figure:: ./figures/numeric-selection.png
    :align: center
+   :alt: plot of variances of numeric variables
 
    "Elbow" in the plot of variances of numeric variables
 
@@ -76,6 +80,7 @@ variables, about a third of the categorical variables available.
 
 .. figure:: ./figures/categorical-selection.png
    :align: center
+   :alt: plot of entropy of categorical variables
 
    "Elbow" in the histogram of entropy of categorical variables
 
@@ -130,12 +135,14 @@ I've overlaid a fitted normal distribution.
 
 .. figure:: ./figures/y-hist.png
    :align: center
+   :alt: histogram of house prices
 
 By log-transforming the response variable, it is much closer to
 following a normal distribution. [#]_
 
 .. figure:: ./figures/y-transformed-hist.png
    :align: center
+   :alt: histogram of log-transformed house prices
 
 Secondly, the loss function specified for the Kaggle competition
 is the mean squared error of the *logarithm* of the house prices
