@@ -11,15 +11,20 @@ The problem posed is to predict the price of a house given a large
 number of features of the house: the number of stories, the floor
 area, the number of bedrooms, the size of the yard, and so on.
 The data are from houses in Ames, Iowa, compiled for use in data
-science education. To solve the problem, I developed a Generalized
-Linear Regression (GLM) model. The GLM model works by fitting a
-function to the features of houses with known prices; then, to
-predict the price of an additional house, the estimated function
-is evaluated with the house's particular features. The function
-takes the form of a *hyperplane* (a generalization of the plane
-to higher dimensional space). Usually the response variable, in
-our case the house price, is transformed before the fitting takes
-place.
+science education.
+
+To solve the problem, I developed a Generalized Linear Regression
+(GLM) model. The GLM model works by fitting a function to the
+features of houses with known prices; then, to predict the price
+of an additional house, the estimated function is evaluated with
+the house's particular features. The function takes the form of a
+*hyperplane* (a generalization of the plane to higher dimensional
+space). Usually the response variable, in our case the house
+price, is transformed before the fitting takes place.
+
+The code for this project can be found on Github.
+
+.. TODO: add link
 
 Data Prep
 ---------
