@@ -25,9 +25,9 @@ the house's particular features. The function takes the form of a
 space). Usually the response variable, in our case the house
 price, is transformed before the fitting takes place.
 
-The code for this project can be found on Github_.
+The code for this project can be found on GitHub_.
 
-.. _Github: https://github.com/mmallicoat/kaggle-house-prices
+.. _GitHub: https://github.com/mmallicoat/kaggle-house-prices
 
 Data Prep
 ---------
